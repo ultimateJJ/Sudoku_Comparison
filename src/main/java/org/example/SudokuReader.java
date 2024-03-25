@@ -1,5 +1,7 @@
 package org.example;
 
+import org.example.fields.SimpleSudokuField;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -7,7 +9,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class SudokuReader {
-    public static int[][] readSudokuFromCSV(String path) throws FileNotFoundException{
+
+    private int[][] field;
+    public SudokuReader(String path) throws FileNotFoundException{
         List<String[]> rawRecords = new ArrayList<>();
         try (Scanner scanner = new Scanner(new File(path))) {
             while (scanner.hasNextLine()) {
@@ -15,7 +19,15 @@ public class SudokuReader {
             }
         }
         String[][] stringArray = rawRecords.toArray(new String[0][0]);
-        return convert2dStringArrayToInt(stringArray);
+        this.field = convert2dStringArrayToInt(stringArray);
+    }
+
+    public int[][] getField() {
+        int[][] newField = new int[field.length][field[0].length];
+        for (int row_index = 0; row_index < this.field.length; row_index++) {
+            newField[row_index] = this.field[row_index].clone();
+        }
+        return newField;
     }
 
     private static String[] getRecordFromLine(String line) {
